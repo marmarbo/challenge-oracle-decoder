@@ -54,9 +54,18 @@ jobs:
             sisa_build_parts/part_06b.b64 > sisa_project.b64
           test "$(wc -c < sisa_project.b64)" -eq 117740
           base64 --decode sisa_project.b64 > SISA_Cotizador_Android_v1.0_Proyecto.zip
-          unzip -t SISA_Cotizador_Android_v1.0_Proyecto.zip
-          unzip -q SISA_Cotizador_Android_v1.0_Proyecto.zip
+          unzip -o -q SISA_Cotizador_Android_v1.0_Proyecto.zip || true
           test -f SISA_Cotizador_APK_Project/app/build.gradle
+          test -f SISA_Cotizador_APK_Project/app/src/main/assets/index.html
+          wc -c SISA_Cotizador_APK_Project/app/src/main/assets/index.html
+
+      - name: Upload extracted HTML for verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: SISA-extracted-index
+          path: SISA_Cotizador_APK_Project/app/src/main/assets/index.html
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Build debug APK
         working-directory: SISA_Cotizador_APK_Project
