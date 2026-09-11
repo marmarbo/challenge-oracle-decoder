@@ -26,6 +26,24 @@ jobs:
       - name: Install Android 35 SDK
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
+      - name: Prepare APK signing tool
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p android-apk-tools/lib
+          cp "$ANDROID_HOME/build-tools/35.0.0/apksigner" android-apk-tools/apksigner
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" android-apk-tools/lib/apksigner.jar
+          chmod +x android-apk-tools/apksigner
+          ls -lh android-apk-tools android-apk-tools/lib
+
+      - name: Upload APK signing tool
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-APK-signing-tool
+          path: android-apk-tools
+          if-no-files-found: error
+          retention-days: 1
+
       - name: Set up Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
