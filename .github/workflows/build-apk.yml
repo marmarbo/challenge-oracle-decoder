@@ -35,8 +35,21 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          cat sisa_build_parts/part_*.b64 > sisa_project.b64
+          cat \
+            sisa_build_parts/part_00.b64 \
+            sisa_build_parts/part_01a.b64 \
+            sisa_build_parts/part_01b.b64 \
+            sisa_build_parts/part_02.b64 \
+            sisa_build_parts/part_03.b64 \
+            sisa_build_parts/part_04.b64 \
+            sisa_build_parts/part_05a.b64 \
+            sisa_build_parts/part_05b.b64 \
+            sisa_build_parts/part_05c.b64 \
+            sisa_build_parts/part_06a.b64 \
+            sisa_build_parts/part_06b.b64 > sisa_project.b64
+          test "$(wc -c < sisa_project.b64)" -eq 117740
           base64 --decode sisa_project.b64 > SISA_Cotizador_Android_v1.0_Proyecto.zip
+          echo "4aaa64b2c9e2b5c280223ecef3f14211f5d048bb135f6a5e9ff6742fef374523  SISA_Cotizador_Android_v1.0_Proyecto.zip" | sha256sum -c -
           unzip -t SISA_Cotizador_Android_v1.0_Proyecto.zip
           unzip -q SISA_Cotizador_Android_v1.0_Proyecto.zip
           test -f SISA_Cotizador_APK_Project/app/build.gradle
